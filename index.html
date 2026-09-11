@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Circuito Saúde — CETI José Marques 2026</title>
+  
+  <!-- Chart.js para Gráficos de Barras -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    /* Estilos Gerais e Tema Escuro Esportivo */
+    :root {
+      --bg-principal: #0F172A;
+      --bg-card: #1E293B;
+      --bg-input: #0F172A;
+      --azul-destaque: #0EA5E9;
+      --verde-saude: #10B981;
+      --laranja-alerta: #F97316;
+      --texto-claro: #F8FAFC;
+      --texto-secundario: #94A3B8;
+      --borda: #334155;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-principal);
+      color: var(--texto-claro);
+      padding-top: 90px;
+      padding-bottom: 40px;
+      min-height: 100vh;
+    }
+
+    /* Cabeçalho e Logo Fixa Redonda no Canto */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 80px;
+      background-color: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--borda);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      z-index: 1000;
+    }
+
+    .header-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header-title {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--texto-claro);
+      letter-spacing: 0.5px;
+    }
+
+    .header-title span {
+      color: var(--azul-destaque);
+    }
+
+    .header-sub {
+      font-size: 0.85rem;
+      color: var(--verde-saude);
+      font-weight: 600;
+    }
+
+    /* Logo Redonda Fixa */
+    .logo-fixed {
+      width: 55px;
+      height: 55px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--azul-destaque);
+      box-shadow: 0 0 10px rgba(14, 165, 233, 0.4);
+    }
+
+    /* Menu de Abas na Horizontal no Topo */
+    .nav-tabs {
+      max-width: 1200px;
+      margin: 0 auto 2rem auto;
+      display: flex;
+      gap: 10px;
+      padding: 0 1rem;
+      overflow-x: auto;
+    }
+
+    .tab-btn {
+      background-color: var(--bg-card);
+      color: var(--texto-secundario);
+      border: 1px solid var(--borda);
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.3s ease;
+    }
+
+    .tab-btn:hover {
+      background-color: #26354A;
+      color: var(--texto-claro);
+    }
+
+    .tab-btn.active {
+      background-color: var(--azul-destaque);
+      color: #FFFFFF;
+      border-color: var(--azul-destaque);
+      box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+    }
+
+    /* Container do Conteúdo Princpal */
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    /* Controle Exclusivo de Abas (Uma ativa, outras 100% ocultas) */
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* Grid para Formulários e Tabelas */
+    .grid-container {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    @media (min-width: 768px) {
+      .grid-container {
+        grid-template-columns: 350px 1fr;
+      }
+    }
+
+    /* Cards e Form */
+    .card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--borda);
+      border-radius: 14px;
+      padding: 1.5rem;
+    }
+
+    .card h2 {
+      font-size: 1.25rem;
+      color: var(--azul-destaque);
+      margin-bottom: 1.2rem;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.8rem;
+      color: var(--texto-secundario);
+      margin-bottom: 0.4rem;
+    }
+
+    .form-control {
+      width: 100%;
+      background-color: var(--bg-input);
+      border: 1px solid var(--borda);
+      border-radius: 8px;
+      padding: 10px;
+      color: var(--texto-claro);
+      outline: none;
+    }
+
+    .form-control:focus {
+      border-color: var(--azul-destaque);
+    }
+
+    .row-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .btn-submit {
+      width: 100%;
+      background-color: var(--azul-destaque);
+      color: #FFF;
+      border: none;
+      padding: 12px;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+
+    .btn-submit:hover {
+      background-color: #0284C7;
+    }
+
+    /* Tabelas */
+    .table-responsive {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.9rem;
+    }
+
+    th, td {
+      padding: 12px;
+      border-bottom: 1px solid var(--borda);
+    }
+
+    th {
+      background-color: var(--bg-input);
+      color: var(--texto-secundario);
+    }
+
+    .badge {
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    .badge-saudavel {
+      background-color: rgba(16, 185, 129, 0.15);
+      color: var(--verde-saude);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .badge-atencao {
+      background-color: rgba(249, 115, 22, 0.15);
+      color: var(--laranja-alerta);
+      border: 1px solid rgba(249, 115, 22, 0.3);
+    }
+
+    /* Título Oficial dos Gráficos */
+    .results-header-title {
+      text-align: center;
+      font-size: 1.4rem;
+      color: var(--texto-claro);
+      margin-bottom: 2rem;
+      padding: 1rem;
+      background-color: var(--bg-card);
+      border-radius: 12px;
+      border-left: 5px solid var(--azul-destaque);
+    }
+
+    /* Gráficos Grid */
+    .charts-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    @media (min-width: 768px) {
+      .charts-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .chart-card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--borda);
+      border-radius: 12px;
+      padding: 1.2rem;
+    }
+
+    .chart-card h3 {
+      font-size: 1rem;
+      text-align: center;
+      margin-bottom: 1rem;
+      color: var(--texto-secundario);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Cabeçalho Fixo com Logo Redonda -->
+  <header>
+    <div class="header-info">
+      <div class="header-title">CIRCUITO <span>SAÚDE</span></div>
+      <div class="header-sub">CETI • JOSÉ MARQUES 2026</div>
+    </div>
+    <img src="logo.edu.png" alt="Logo Circuito Saúde" class="logo-fixed" onerror="this.style.display='none'">
+  </header>
+
+  <!-- Navegação de Abas -->
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="openTab('imc')">1. IMC</button>
+    <button class="tab-btn" onclick="openTab('flexibilidade')">2. Flexibilidade</button>
+    <button class="tab-btn" onclick="openTab('resistencia')">3. Resistência</button>
+    <button class="tab-btn" onclick="openTab('agilidade')">4. Agilidade</button>
+    <button class="tab-btn" onclick="openTab('resultados')">📊 Resultados e Gráficos</button>
+  </nav>
+
+  <main>
+    <!-- ABA 1: IMC -->
+    <section id="tab-imc" class="tab-content active">
+      <div class="grid-container">
+        <div class="card">
+          <h2>Registrar IMC</h2>
+          <form id="form-imc">
+            <div class="form-group">
+              <label>Nome Completo do Aluno</label>
+              <input type="text" id="imc-nome" class="form-control" required placeholder="Ex: Ana Souza">
+            </div>
+            <div class="form-group row-2">
+              <div>
+                <label>Idade</label>
+                <input type="number" id="imc-idade" class="form-control" required placeholder="Anos">
+              </div>
+              <div>
+                <label>Sexo</label>
+                <select id="imc-sexo" class="form-control">
+                  <option value="M">Masculino</option>
+                  <option value="F">Feminino</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group row-2">
+              <div>
+                <label>Peso (kg)</label>
+                <input type="number" step="0.1" id="imc-peso" class="form-control" required placeholder="Ex: 52.5">
+              </div>
+              <div>
+                <label>Altura (cm)</label>
+                <input type="number" id="imc-altura" class="form-control" required placeholder="Ex: 160">
+              </div>
+            </div>
+            <button type="submit" class="btn-submit">Calcular e Salvar IMC</button>
+          </form>
+        </div>
+        <div class="card">
+          <h2>Registros de IMC (Ordem Alfabética)</h2>
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th>Nome</th>
+                  <th>Idade/Sexo</th>
+                  <th>IMC</th>
+                  <th>Classificação</th>
+                </tr>
+              </thead>
+              <tbody id="table-imc-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABA 2: FLEXIBILIDADE -->
+    <section id="tab-flexibilidade" class="tab-content">
+      <div class="grid-container">
+        <div class="card">
+          <h2>Registrar Flexibilidade</h2>
+          <form id="form-flex">
+            <div class="form-group">
+              <label>Nome Completo do Aluno</label>
+              <input type="text" id="flex-nome" class="form-control" required placeholder="Ex: Carlos Lima">
+            </div>
+            <div class="form-group row-2">
+              <div>
+                <label>Idade</label>
+                <input type="number" id="flex-idade" class="form-control" required placeholder="Anos">
+              </div>
+              <div>
+                <label>Sexo</label>
+                <select id="flex-sexo" class="form-control">
+                  <option value="M">Masculino</option>
+                  <option value="F">Feminino</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Distância Alcançada (cm)</label>
+              <input type="number" step="0.1" id="flex-valor" class="form-control" required placeholder="Ex: 22.5">
+            </div>
+            <button type="submit" class="btn-submit">Salvar Registro</button>
+          </form>
+        </div>
+        <div class="card">
+          <h2>Registros de Flexibilidade (Ordem Alfabética)</h2>
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th>Nome</th>
+                  <th>Idade/Sexo</th>
+                  <th>Distância (cm)</th>
+                  <th>Classificação</th>
+                </tr>
+              </thead>
+              <tbody id="table-flex-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABA 3: RESISTÊNCIA -->
+    <section id="tab-resistencia" class="tab-content">
+      <div class="grid-container">
+        <div class="card">
+          <h2>Registrar Resistência</h2>
+          <form id="form-res">
+            <div class="form-group">
+              <label>Nome Completo do Aluno</label>
+              <input type="text" id="res-nome" class="form-control" required placeholder="Ex: Daniel Costa">
+            </div>
+            <div class="form-group row-2">
+              <div>
+                <label>Idade</label>
+                <input type="number" id="res-idade" class="form-control" required placeholder="Anos">
+              </div>
+              <div>
+                <label>Sexo</label>
+                <select id="res-sexo" class="form-control">
+                  <option value="M">Masculino</option>
+                  <option value="F">Feminino</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Repetições (1 min) ou Distância (m)</label>
+              <input type="number" id="res-valor" class="form-control" required placeholder="Ex: 28">
+            </div>
+            <button type="submit" class="btn-submit">Salvar Registro</button>
+          </form>
+        </div>
+        <div class="card">
+          <h2>Registros de Resistência (Ordem Alfabética)</h2>
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th>Nome</th>
+                  <th>Idade/Sexo</th>
+                  <th>Resultado</th>
+                  <th>Classificação</th>
+                </tr>
+              </thead>
+              <tbody id="table-res-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABA 4: AGILIDADE -->
+    <section id="tab-agilidade" class="tab-content">
+      <div class="grid-container">
+        <div class="card">
+          <h2>Registrar Agilidade</h2>
+          <form id="form-agil">
+            <div class="form-group">
+              <label>Nome Completo do Aluno</label>
+              <input type="text" id="agil-nome" class="form-control" required placeholder="Ex: Beatriz Rocha">
+            </div>
+            <div class="form-group row-2">
+              <div>
+                <label>Idade</label>
+                <input type="number" id="agil-idade" class="form-control" required placeholder="Anos">
+              </div>
+              <div>
+                <label>Sexo</label>
+                <select id="agil-sexo" class="form-control">
+                  <option value="M">Masculino</option>
+                  <option value="F">Feminino</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Tempo (segundos)</label>
+              <input type="number" step="0.01" id="agil-valor" class="form-control" required placeholder="Ex: 11.4">
+            </div>
+            <button type="submit" class="btn-submit">Salvar Registro</button>
+          </form>
+        </div>
+        <div class="card">
+          <h2>Registros de Agilidade (Ordem Alfabética)</h2>
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th>Nome</th>
+                  <th>Idade/Sexo</th>
+                  <th>Tempo (s)</th>
+                  <th>Classificação</th>
+                </tr>
+              </thead>
+              <tbody id="table-agil-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABA 5: RESULTADOS E GRÁFICOS -->
+    <section id="tab-resultados" class="tab-content">
+      <div class="results-header-title">
+        Pesquisa de Condicionamento Físico realizada na Escola CETI José Marques — Ano 2026
+      </div>
+
+      <!-- Tabela Unificada Mini Caderninho -->
+      <div class="card" style="margin-bottom: 2rem;">
+        <h2>Consolidado Geral por Aluno</h2>
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Aluno</th>
+                <th>Sexo</th>
+                <th>IMC</th>
+                <th>Flexibilidade</th>
+                <th>Resistência</th>
+                <th>Agilidade</th>
+                <th>Status Geral</th>
+              </tr>
+            </thead>
+            <tbody id="table-consolidado-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Gráficos Grid -->
+      <div class="charts-grid">
+        <div class="chart-card">
+          <h3>Composição Corporal (IMC)</h3>
+          <canvas id="chartIMC"></canvas>
+        </div>
+        <div class="chart-card">
+          <h3>Flexibilidade</h3>
+          <canvas id="chartFlex"></canvas>
+        </div>
+        <div class="chart-card">
+          <h3>Resistência</h3>
+          <canvas id="chartRes"></canvas>
+        </div>
+        <div class="chart-card">
+          <h3>Agilidade</h3>
+          <canvas id="chartAgil"></canvas>
+        </div>
+        <div class="chart-card">
+          <h3>Condicionamento Geral da Turma</h3>
+          <canvas id="chartGeral"></canvas>
+        </div>
+        <!-- Novo Gráfico Comparativo: Homens vs. Mulheres -->
+        <div class="chart-card">
+          <h3>Comparativo: Homens vs. Mulheres</h3>
+          <canvas id="chartSexo"></canvas>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- MÓDULO SCRIPT COM FIREBASE -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+    import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-database.js";
+
+    // Configuração do Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyBhY5_x19nM9f37REgpMCRUuow2jIbEpt4",
+      authDomain: "circuito-saude.firebaseapp.com",
+      databaseURL: "https://circuito-saude-default-rtdb.firebaseio.com",
+      projectId: "circuito-saude",
+      storageBucket: "circuito-saude.firebasestorage.app",
+      messagingSenderId: "646614608315",
+      appId: "1:646614608315:web:1930bacc900b47b1a1fc9e",
+      measurementId: "G-4D2GP74QB6"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    // Estado Local dos Dados
+    window.appData = {
+      imc: [],
+      flexibilidade: [],
+      resistencia: [],
+      agilidade: []
+    };
+
+    // Sincronização em Tempo Real com o Firebase
+    const dbRef = ref(db, 'circuito_saude_2026');
+    onValue(dbRef, (snapshot) => {
+      const data = snapshot.val();
+      window.appData = { imc: [], flexibilidade: [], resistencia: [], agilidade: [] };
+
+      if (data) {
+        Object.keys(data).forEach(key => {
+          const item = data[key];
+          if (window.appData[item.tipo]) {
+            window.appData[item.tipo].push(item);
+          }
+        });
+      }
+
+      // Ordenar todos os registros em ordem alfabética
+      Object.keys(window.appData).forEach(tipo => {
+        window.appData[tipo].sort((a, b) => a.nome.localeCompare(b.nome));
+      });
+
+      renderAllTables();
+      if (document.getElementById('tab-resultados').classList.contains('active')) {
+        renderCharts();
+      }
+    });
+
+    // Função para Salvar no Firebase Realtime Database
+    window.saveToFirebase = function(tipo, objeto) {
+      push(ref(db, 'circuito_saude_2026'), { ...objeto, tipo, timestamp: Date.now() });
+    };
+  </script>
+
+  <!-- LÓGICA DO SITE E NAVEGAÇÃO DE ABAS -->
+  <script>
+    // Navegação Isolada de Abas
+    function openTab(tabName) {
+      const contents = document.querySelectorAll('.tab-content');
+      const buttons = document.querySelectorAll('.tab-btn');
+
+      contents.forEach(content => content.classList.remove('active'));
+      buttons.forEach(btn => btn.classList.remove('active'));
+
+      document.getElementById('tab-' + tabName).classList.add('active');
+      event.currentTarget.classList.add('active');
+
+      if (tabName === 'resultados') {
+        renderCharts();
+      }
+    }
+
+    // Regras de Classificação
+    function getClassificacaoIMC(imc) {
+      if (imc < 18.5) return 'Abaixo do Peso';
+      if (imc <= 24.9) return 'Normal (Saudável)';
+      if (imc <= 29.9) return 'Sobrepeso';
+      return 'Obesidade';
+    }
+
+    function getClassificacaoMotor(valor, limite) {
+      return Number(valor) >= limite ? 'Zona Saudável' : 'Zona de Risco';
+    }
+
+    // Formulário 1: IMC
+    document.getElementById('form-imc').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const nome = document.getElementById('imc-nome').value.trim();
+      const idade = document.getElementById('imc-idade').value;
+      const sexo = document.getElementById('imc-sexo').value;
+      const peso = parseFloat(document.getElementById('imc-peso').value);
+      const altura = parseFloat(document.getElementById('imc-altura').value) / 100;
+
+      const imc = (peso / (altura * altura)).toFixed(2);
+      const status = getClassificacaoIMC(imc);
+
+      window.saveToFirebase('imc', { nome, idade, sexo, imc, status });
+      this.reset();
+    });
+
+    // Formulário 2: Flexibilidade
+    document.getElementById('form-flex').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const nome = document.getElementById('flex-nome').value.trim();
+      const idade = document.getElementById('flex-idade').value;
+      const sexo = document.getElementById('flex-sexo').value;
+      const valor = document.getElementById('flex-valor').value;
+
+      const status = getClassificacaoMotor(valor, 20);
+      window.saveToFirebase('flexibilidade', { nome, idade, sexo, valor, status });
+      this.reset();
+    });
+
+    // Formulário 3: Resistência
+    document.getElementById('form-res').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const nome = document.getElementById('res-nome').value.trim();
+      const idade = document.getElementById('res-idade').value;
+      const sexo = document.getElementById('res-sexo').value;
+      const valor = document.getElementById('res-valor').value;
+
+      const status = getClassificacaoMotor(valor, 25);
+      window.saveToFirebase('resistencia', { nome, idade, sexo, valor, status });
+      this.reset();
+    });
+
+    // Formulário 4: Agilidade
+    document.getElementById('form-agil').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const nome = document.getElementById('agil-nome').value.trim();
+      const idade = document.getElementById('agil-idade').value;
+      const sexo = document.getElementById('agil-sexo').value;
+      const valor = document.getElementById('agil-valor').value;
+
+      // Agilidade: menor tempo é melhor
+      const status = parseFloat(valor) <= 12.5 ? 'Zona Saudável' : 'Zona de Risco';
+      window.saveToFirebase('agilidade', { nome, idade, sexo, valor, status });
+      this.reset();
+    });
+
+    // Renderização das Tabelas com Badges
+    function renderAllTables() {
+      const types = ['imc', 'flexibilidade', 'resistencia', 'agilidade'];
+
+      types.forEach(tipo => {
+        const tbody = document.getElementById(`table-${tipo.substring(0,4)}-body`);
+        if (!tbody) return;
+        tbody.innerHTML = '';
+
+        window.appData[tipo].forEach(item => {
+          const isSaudavel = item.status.includes('Saudável') || item.status.includes('Normal');
+          const badgeClass = isSaudavel ? 'badge-saudavel' : 'badge-atencao';
+          const valDisplay = tipo === 'imc' ? `IMC: ${item.imc}` : item.valor;
+
+          tbody.innerHTML += `
+            <tr>
+              <td><strong>${item.nome}</strong></td>
+              <td>${item.idade} anos (${item.sexo})</td>
+              <td>${valDisplay}</td>
+              <td><span class="badge ${badgeClass}">${item.status}</span></td>
+            </tr>
+          `;
+        });
+      });
+
+      renderConsolidadoTable();
+    }
+
+    // Tabela Consolidada (Circuito Completo)
+    function renderConsolidadoTable() {
+      const tbody = document.getElementById('table-consolidado-body');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+
+      const alunosMap = {};
+
+      Object.keys(window.appData).forEach(tipo => {
+        window.appData[tipo].forEach(item => {
+          if (!alunosMap[item.nome]) {
+            alunosMap[item.nome] = { nome: item.nome, sexo: item.sexo, imc: '-', flex: '-', res: '-', agil: '-', pontos: 0 };
+          }
+          if (tipo === 'imc') {
+            alunosMap[item.nome].imc = item.status;
+            if (item.status.includes('Normal')) alunosMap[item.nome].pontos++;
+          }
+          if (tipo === 'flexibilidade') {
+            alunosMap[item.nome].flex = item.status;
+            if (item.status.includes('Saudável')) alunosMap[item.nome].pontos++;
+          }
+          if (tipo === 'resistencia') {
+            alunosMap[item.nome].res = item.status;
+            if (item.status.includes('Saudável')) alunosMap[item.nome].pontos++;
+          }
+          if (tipo === 'agilidade') {
+            alunosMap[item.nome].agil = item.status;
+            if (item.status.includes('Saudável')) alunosMap[item.nome].pontos++;
+          }
+        });
+      });
+
+      const alunos = Object.values(alunosMap).sort((a,b) => a.nome.localeCompare(b.nome));
+
+      alunos.forEach(a => {
+        const statusGeral = a.pontos >= 3 ? 'Condicionamento Adequado' : 'Necessita Atenção';
+        const badgeClass = a.pontos >= 3 ? 'badge-saudavel' : 'badge-atencao';
+
+        tbody.innerHTML += `
+          <tr>
+            <td><strong>${a.nome}</strong></td>
+            <td>${a.sexo}</td>
+            <td>${a.imc}</td>
+            <td>${a.flex}</td>
+            <td>${a.res}</td>
+            <td>${a.agil}</td>
+            <td><span class="badge ${badgeClass}">${statusGeral}</span></td>
+          </tr>
+        `;
+      });
+
+      window.consolidadoAlunos = alunos;
+    }
+
+    // Instâncias Globais dos Gráficos
+    let chartInstances = {};
+
+    function renderCharts() {
+      const createBarChart = (canvasId, labels, data, colors) => {
+        if (chartInstances[canvasId]) chartInstances[canvasId].destroy();
+        const ctx = document.getElementById(canvasId).getContext('2d');
+        chartInstances[canvasId] = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: labels,
+            datasets: [{
+              data: data,
+              backgroundColor: colors
+            }]
+          },
+          options: {
+            plugins: { legend: { display: false } },
+            scales: {
+              y: { beginAtZero: true, ticks: { color: '#94A3B8' } },
+              x: { ticks: { color: '#94A3B8' } }
+            }
+          }
+        });
+      };
+
+      // Contagens para Gráficos
+      const countByStatus = (tipo, categorias) => {
+        const counts = {};
+        categorias.forEach(c => counts[c] = 0);
+        window.appData[tipo].forEach(i => { if (counts[i.status] !== undefined) counts[i.status]++; });
+        return Object.values(counts);
+      };
+
+      createBarChart('chartIMC', ['Abaixo', 'Normal', 'Sobrepeso', 'Obesidade'], countByStatus('imc', ['Abaixo do Peso', 'Normal (Saudável)', 'Sobrepeso', 'Obesidade']), ['#38BDF8', '#10B981', '#F59E0B', '#EF4444']);
+      createBarChart('chartFlex', ['Zona Saudável', 'Zona de Risco'], countByStatus('flexibilidade', ['Zona Saudável', 'Zona de Risco']), ['#10B981', '#F97316']);
+      createBarChart('chartRes', ['Zona Saudável', 'Zona de Risco'], countByStatus('resistencia', ['Zona Saudável', 'Zona de Risco']), ['#10B981', '#F97316']);
+      createBarChart('chartAgil', ['Zona Saudável', 'Zona de Risco'], countByStatus('agilidade', ['Zona Saudável', 'Zona de Risco']), ['#10B981', '#F97316']);
+
+      // Gráfico Geral
+      const consolidados = window.consolidadoAlunos || [];
+      const adequados = consolidados.filter(a => a.pontos >= 3).length;
+      const atencao = consolidados.filter(a => a.pontos < 3).length;
+      createBarChart('chartGeral', ['Adequado', 'Necessita Atenção'], [adequados, atencao], ['#10B981', '#F97316']);
+
+      // Gráfico Comparativo: Homens vs. Mulheres
+      const hAdequados = consolidados.filter(a => a.sexo === 'M' && a.pontos >= 3).length;
+      const hAtencao = consolidados.filter(a => a.sexo === 'M' && a.pontos < 3).length;
+      const mAdequadas = consolidados.filter(a => a.sexo === 'F' && a.pontos >= 3).length;
+      const mAtencao = consolidados.filter(a => a.sexo === 'F' && a.pontos < 3).length;
+
+      if (chartInstances['chartSexo']) chartInstances['chartSexo'].destroy();
+      const ctxSexo = document.getElementById('chartSexo').getContext('2d');
+      chartInstances['chartSexo'] = new Chart(ctxSexo, {
+        type: 'bar',
+        data: {
+          labels: ['Homens (Adequado)', 'Homens (Atenção)', 'Mulheres (Adequado)', 'Mulheres (Atenção)'],
+          datasets: [{
+            data: [hAdequados, hAtencao, mAdequadas, mAtencao],
+            backgroundColor: ['#0EA5E9', '#F97316', '#EC4899', '#EAB308']
+          }]
+        },
+        options: {
+          plugins: { legend: { display: false } },
+          scales: {
+            y: { beginAtZero: true, ticks: { color: '#94A3B8' } },
+            x: { ticks: { color: '#94A3B8', font: { size: 10 } } }
+          }
+        }
+      });
+    }
+  </script>
+</body>
+</html>
