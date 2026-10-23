@@ -120,14 +120,13 @@
       box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
     }
 
-    /* Container do Conteúdo Princpal */
+    /* Container do Conteúdo Principal */
     main {
       max-width: 1200px;
       margin: 0 auto;
       padding: 0 1rem;
     }
 
-    /* Controle Exclusivo de Abas (Uma ativa, outras 100% ocultas) */
     .tab-content {
       display: none;
     }
@@ -136,7 +135,6 @@
       display: block;
     }
 
-    /* Grid para Formulários e Tabelas */
     .grid-container {
       display: grid;
       grid-template-columns: 1fr;
@@ -149,7 +147,6 @@
       }
     }
 
-    /* Cards e Form */
     .card {
       background-color: var(--bg-card);
       border: 1px solid var(--borda);
@@ -210,7 +207,6 @@
       background-color: #0284C7;
     }
 
-    /* Tabelas */
     .table-responsive {
       overflow-x: auto;
     }
@@ -251,7 +247,6 @@
       border: 1px solid rgba(249, 115, 22, 0.3);
     }
 
-    /* Título Oficial dos Gráficos */
     .results-header-title {
       text-align: center;
       font-size: 1.4rem;
@@ -263,7 +258,6 @@
       border-left: 5px solid var(--azul-destaque);
     }
 
-    /* Gráficos Grid */
     .charts-grid {
       display: grid;
       grid-template-columns: 1fr;
@@ -307,8 +301,9 @@
   <nav class="nav-tabs">
     <button class="tab-btn active" onclick="openTab('imc')">1. IMC</button>
     <button class="tab-btn" onclick="openTab('flexibilidade')">2. Flexibilidade</button>
-    <button class="tab-btn" onclick="openTab('resistencia')">3. Resistência</button>
-    <button class="tab-btn" onclick="openTab('agilidade')">4. Agilidade</button>
+    <button class="tab-btn" onclick="openTab('forca')">3. Força (Abdominal)</button>
+    <button class="tab-btn" onclick="openTab('resistencia')">4. Resistência (Flexão)</button>
+    <button class="tab-btn" onclick="openTab('agilidade')">5. Agilidade</button>
     <button class="tab-btn" onclick="openTab('resultados')">📊 Resultados e Gráficos</button>
   </nav>
 
@@ -417,15 +412,64 @@
       </div>
     </section>
 
-    <!-- ABA 3: RESISTÊNCIA -->
+    <!-- ABA 3: FORÇA (Abdominal) -->
+    <section id="tab-forca" class="tab-content">
+      <div class="grid-container">
+        <div class="card">
+          <h2>Registrar Força (Abdominal)</h2>
+          <form id="form-forca">
+            <div class="form-group">
+              <label>Nome Completo do Aluno</label>
+              <input type="text" id="forca-nome" class="form-control" required placeholder="Ex: Daniel Costa">
+            </div>
+            <div class="form-group row-2">
+              <div>
+                <label>Idade</label>
+                <input type="number" id="forca-idade" class="form-control" required placeholder="Anos">
+              </div>
+              <div>
+                <label>Sexo</label>
+                <select id="forca-sexo" class="form-control">
+                  <option value="M">Masculino</option>
+                  <option value="F">Feminino</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Repetições de Abdominais (1 min)</label>
+              <input type="number" id="forca-valor" class="form-control" required placeholder="Ex: 28">
+            </div>
+            <button type="submit" class="btn-submit">Salvar Registro</button>
+          </form>
+        </div>
+        <div class="card">
+          <h2>Registros de Abdominais (Ordem Alfabética)</h2>
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th>Nome</th>
+                  <th>Idade/Sexo</th>
+                  <th>Repetições</th>
+                  <th>Classificação</th>
+                </tr>
+              </thead>
+              <tbody id="table-forca-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABA 4: RESISTÊNCIA (Flexão) -->
     <section id="tab-resistencia" class="tab-content">
       <div class="grid-container">
         <div class="card">
-          <h2>Registrar Resistência</h2>
+          <h2>Registrar Resistência (Flexão)</h2>
           <form id="form-res">
             <div class="form-group">
               <label>Nome Completo do Aluno</label>
-              <input type="text" id="res-nome" class="form-control" required placeholder="Ex: Daniel Costa">
+              <input type="text" id="res-nome" class="form-control" required placeholder="Ex: Mariana Souza">
             </div>
             <div class="form-group row-2">
               <div>
@@ -441,21 +485,21 @@
               </div>
             </div>
             <div class="form-group">
-              <label>Repetições (1 min) ou Distância (m)</label>
-              <input type="number" id="res-valor" class="form-control" required placeholder="Ex: 28">
+              <label>Repetições de Flexões de Braço</label>
+              <input type="number" id="res-valor" class="form-control" required placeholder="Ex: 15">
             </div>
             <button type="submit" class="btn-submit">Salvar Registro</button>
           </form>
         </div>
         <div class="card">
-          <h2>Registros de Resistência (Ordem Alfabética)</h2>
+          <h2>Registros de Flexões (Ordem Alfabética)</h2>
           <div class="table-responsive">
             <table>
               <thead>
                 <tr>
                   <th>Nome</th>
                   <th>Idade/Sexo</th>
-                  <th>Resultado</th>
+                  <th>Repetições</th>
                   <th>Classificação</th>
                 </tr>
               </thead>
@@ -466,7 +510,7 @@
       </div>
     </section>
 
-    <!-- ABA 4: AGILIDADE -->
+    <!-- ABA 5: AGILIDADE -->
     <section id="tab-agilidade" class="tab-content">
       <div class="grid-container">
         <div class="card">
@@ -515,7 +559,7 @@
       </div>
     </section>
 
-    <!-- ABA 5: RESULTADOS E GRÁFICOS -->
+    <!-- ABA 6: RESULTADOS E GRÁFICOS -->
     <section id="tab-resultados" class="tab-content">
       <div class="results-header-title">
         Pesquisa de Condicionamento Físico realizada na Escola CETI José Marques — Ano 2026
@@ -532,7 +576,8 @@
                 <th>Sexo</th>
                 <th>IMC</th>
                 <th>Flexibilidade</th>
-                <th>Resistência</th>
+                <th>Abdominal (Força)</th>
+                <th>Flexão (Resistência)</th>
                 <th>Agilidade</th>
                 <th>Status Geral</th>
               </tr>
@@ -553,7 +598,11 @@
           <canvas id="chartFlex"></canvas>
         </div>
         <div class="chart-card">
-          <h3>Resistência</h3>
+          <h3>Força (Abdominal)</h3>
+          <canvas id="chartForca"></canvas>
+        </div>
+        <div class="chart-card">
+          <h3>Resistência (Flexão)</h3>
           <canvas id="chartRes"></canvas>
         </div>
         <div class="chart-card">
@@ -564,7 +613,7 @@
           <h3>Condicionamento Geral da Turma</h3>
           <canvas id="chartGeral"></canvas>
         </div>
-        <!-- Novo Gráfico Comparativo: Homens vs. Mulheres -->
+        <!-- Gráfico Comparativo: Homens vs. Mulheres -->
         <div class="chart-card">
           <h3>Comparativo: Homens vs. Mulheres</h3>
           <canvas id="chartSexo"></canvas>
@@ -597,6 +646,7 @@
     window.appData = {
       imc: [],
       flexibilidade: [],
+      forca: [],
       resistencia: [],
       agilidade: []
     };
@@ -605,7 +655,7 @@
     const dbRef = ref(db, 'circuito_saude_2026');
     onValue(dbRef, (snapshot) => {
       const data = snapshot.val();
-      window.appData = { imc: [], flexibilidade: [], resistencia: [], agilidade: [] };
+      window.appData = { imc: [], flexibilidade: [], forca: [], resistencia: [], agilidade: [] };
 
       if (data) {
         Object.keys(data).forEach(key => {
@@ -692,7 +742,20 @@
       this.reset();
     });
 
-    // Formulário 3: Resistência
+    // Formulário 3: Força (Abdominal)
+    document.getElementById('form-forca').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const nome = document.getElementById('forca-nome').value.trim();
+      const idade = document.getElementById('forca-idade').value;
+      const sexo = document.getElementById('forca-sexo').value;
+      const valor = document.getElementById('forca-valor').value;
+
+      const status = getClassificacaoMotor(valor, 20);
+      window.saveToFirebase('forca', { nome, idade, sexo, valor, status });
+      this.reset();
+    });
+
+    // Formulário 4: Resistência (Flexão)
     document.getElementById('form-res').addEventListener('submit', function(e) {
       e.preventDefault();
       const nome = document.getElementById('res-nome').value.trim();
@@ -700,12 +763,12 @@
       const sexo = document.getElementById('res-sexo').value;
       const valor = document.getElementById('res-valor').value;
 
-      const status = getClassificacaoMotor(valor, 25);
+      const status = getClassificacaoMotor(valor, 10);
       window.saveToFirebase('resistencia', { nome, idade, sexo, valor, status });
       this.reset();
     });
 
-    // Formulário 4: Agilidade
+    // Formulário 5: Agilidade
     document.getElementById('form-agil').addEventListener('submit', function(e) {
       e.preventDefault();
       const nome = document.getElementById('agil-nome').value.trim();
@@ -713,7 +776,6 @@
       const sexo = document.getElementById('agil-sexo').value;
       const valor = document.getElementById('agil-valor').value;
 
-      // Agilidade: menor tempo é melhor
       const status = parseFloat(valor) <= 12.5 ? 'Zona Saudável' : 'Zona de Risco';
       window.saveToFirebase('agilidade', { nome, idade, sexo, valor, status });
       this.reset();
@@ -721,17 +783,23 @@
 
     // Renderização das Tabelas com Badges
     function renderAllTables() {
-      const types = ['imc', 'flexibilidade', 'resistencia', 'agilidade'];
+      const tablesConfig = [
+        { tipo: 'imc', prefix: 'imc' },
+        { tipo: 'flexibilidade', prefix: 'flex' },
+        { tipo: 'forca', prefix: 'forca' },
+        { tipo: 'resistencia', prefix: 'res' },
+        { tipo: 'agilidade', prefix: 'agil' }
+      ];
 
-      types.forEach(tipo => {
-        const tbody = document.getElementById(`table-${tipo.substring(0,4)}-body`);
+      tablesConfig.forEach(cfg => {
+        const tbody = document.getElementById(`table-${cfg.prefix}-body`);
         if (!tbody) return;
         tbody.innerHTML = '';
 
-        window.appData[tipo].forEach(item => {
+        window.appData[cfg.tipo].forEach(item => {
           const isSaudavel = item.status.includes('Saudável') || item.status.includes('Normal');
           const badgeClass = isSaudavel ? 'badge-saudavel' : 'badge-atencao';
-          const valDisplay = tipo === 'imc' ? `IMC: ${item.imc}` : item.valor;
+          const valDisplay = cfg.tipo === 'imc' ? `IMC: ${item.imc}` : item.valor;
 
           tbody.innerHTML += `
             <tr>
@@ -758,7 +826,7 @@
       Object.keys(window.appData).forEach(tipo => {
         window.appData[tipo].forEach(item => {
           if (!alunosMap[item.nome]) {
-            alunosMap[item.nome] = { nome: item.nome, sexo: item.sexo, imc: '-', flex: '-', res: '-', agil: '-', pontos: 0 };
+            alunosMap[item.nome] = { nome: item.nome, sexo: item.sexo, imc: '-', flex: '-', forca: '-', res: '-', agil: '-', pontos: 0 };
           }
           if (tipo === 'imc') {
             alunosMap[item.nome].imc = item.status;
@@ -766,6 +834,10 @@
           }
           if (tipo === 'flexibilidade') {
             alunosMap[item.nome].flex = item.status;
+            if (item.status.includes('Saudável')) alunosMap[item.nome].pontos++;
+          }
+          if (tipo === 'forca') {
+            alunosMap[item.nome].forca = item.status;
             if (item.status.includes('Saudável')) alunosMap[item.nome].pontos++;
           }
           if (tipo === 'resistencia') {
@@ -791,6 +863,7 @@
             <td>${a.sexo}</td>
             <td>${a.imc}</td>
             <td>${a.flex}</td>
+            <td>${a.forca}</td>
             <td>${a.res}</td>
             <td>${a.agil}</td>
             <td><span class="badge ${badgeClass}">${statusGeral}</span></td>
@@ -827,7 +900,6 @@
         });
       };
 
-      // Contagens para Gráficos
       const countByStatus = (tipo, categorias) => {
         const counts = {};
         categorias.forEach(c => counts[c] = 0);
@@ -837,6 +909,7 @@
 
       createBarChart('chartIMC', ['Abaixo', 'Normal', 'Sobrepeso', 'Obesidade'], countByStatus('imc', ['Abaixo do Peso', 'Normal (Saudável)', 'Sobrepeso', 'Obesidade']), ['#38BDF8', '#10B981', '#F59E0B', '#EF4444']);
       createBarChart('chartFlex', ['Zona Saudável', 'Zona de Risco'], countByStatus('flexibilidade', ['Zona Saudável', 'Zona de Risco']), ['#10B981', '#F97316']);
+      createBarChart('chartForca', ['Zona Saudável', 'Zona de Risco'], countByStatus('forca', ['Zona Saudável', 'Zona de Risco']), ['#10B981', '#F97316']);
       createBarChart('chartRes', ['Zona Saudável', 'Zona de Risco'], countByStatus('resistencia', ['Zona Saudável', 'Zona de Risco']), ['#10B981', '#F97316']);
       createBarChart('chartAgil', ['Zona Saudável', 'Zona de Risco'], countByStatus('agilidade', ['Zona Saudável', 'Zona de Risco']), ['#10B981', '#F97316']);
 
