@@ -301,8 +301,8 @@
   <nav class="nav-tabs">
     <button class="tab-btn active" onclick="openTab('imc')">1. IMC</button>
     <button class="tab-btn" onclick="openTab('flexibilidade')">2. Flexibilidade</button>
-    <button class="tab-btn" onclick="openTab('forca')">3. Força (Abdominal)</button>
-    <button class="tab-btn" onclick="openTab('resistencia')">4. Resistência (Flexão)</button>
+    <button class="tab-btn" onclick="openTab('forca')">3. Força (Flexão)</button>
+    <button class="tab-btn" onclick="openTab('resistencia')">4. Resistência (Abdominal)</button>
     <button class="tab-btn" onclick="openTab('agilidade')">5. Agilidade</button>
     <button class="tab-btn" onclick="openTab('resultados')">📊 Resultados e Gráficos</button>
   </nav>
@@ -412,11 +412,11 @@
       </div>
     </section>
 
-    <!-- ABA 3: FORÇA (Abdominal) -->
+    <!-- ABA 3: FORÇA (Flexão de Braço) -->
     <section id="tab-forca" class="tab-content">
       <div class="grid-container">
         <div class="card">
-          <h2>Registrar Força (Abdominal)</h2>
+          <h2>Registrar Força (Flexão)</h2>
           <form id="form-forca">
             <div class="form-group">
               <label>Nome Completo do Aluno</label>
@@ -436,14 +436,14 @@
               </div>
             </div>
             <div class="form-group">
-              <label>Repetições de Abdominais (1 min)</label>
-              <input type="number" id="forca-valor" class="form-control" required placeholder="Ex: 28">
+              <label>Repetições de Flexões de Braço</label>
+              <input type="number" id="forca-valor" class="form-control" required placeholder="Ex: 15">
             </div>
             <button type="submit" class="btn-submit">Salvar Registro</button>
           </form>
         </div>
         <div class="card">
-          <h2>Registros de Abdominais (Ordem Alfabética)</h2>
+          <h2>Registros de Força (Ordem Alfabética)</h2>
           <div class="table-responsive">
             <table>
               <thead>
@@ -461,11 +461,11 @@
       </div>
     </section>
 
-    <!-- ABA 4: RESISTÊNCIA (Flexão) -->
+    <!-- ABA 4: RESISTÊNCIA (Abdominal) -->
     <section id="tab-resistencia" class="tab-content">
       <div class="grid-container">
         <div class="card">
-          <h2>Registrar Resistência (Flexão)</h2>
+          <h2>Registrar Resistência (Abdominal)</h2>
           <form id="form-res">
             <div class="form-group">
               <label>Nome Completo do Aluno</label>
@@ -485,14 +485,14 @@
               </div>
             </div>
             <div class="form-group">
-              <label>Repetições de Flexões de Braço</label>
-              <input type="number" id="res-valor" class="form-control" required placeholder="Ex: 15">
+              <label>Repetições de Abdominais (1 min)</label>
+              <input type="number" id="res-valor" class="form-control" required placeholder="Ex: 28">
             </div>
             <button type="submit" class="btn-submit">Salvar Registro</button>
           </form>
         </div>
         <div class="card">
-          <h2>Registros de Flexões (Ordem Alfabética)</h2>
+          <h2>Registros de Resistência (Ordem Alfabética)</h2>
           <div class="table-responsive">
             <table>
               <thead>
@@ -576,8 +576,8 @@
                 <th>Sexo</th>
                 <th>IMC</th>
                 <th>Flexibilidade</th>
-                <th>Abdominal (Força)</th>
-                <th>Flexão (Resistência)</th>
+                <th>Força (Flexão)</th>
+                <th>Resistência (Abdominal)</th>
                 <th>Agilidade</th>
                 <th>Status Geral</th>
               </tr>
@@ -598,11 +598,11 @@
           <canvas id="chartFlex"></canvas>
         </div>
         <div class="chart-card">
-          <h3>Força (Abdominal)</h3>
+          <h3>Força (Flexão)</h3>
           <canvas id="chartForca"></canvas>
         </div>
         <div class="chart-card">
-          <h3>Resistência (Flexão)</h3>
+          <h3>Resistência (Abdominal)</h3>
           <canvas id="chartRes"></canvas>
         </div>
         <div class="chart-card">
@@ -742,7 +742,7 @@
       this.reset();
     });
 
-    // Formulário 3: Força (Abdominal)
+    // Formulário 3: Força (Flexão)
     document.getElementById('form-forca').addEventListener('submit', function(e) {
       e.preventDefault();
       const nome = document.getElementById('forca-nome').value.trim();
@@ -750,12 +750,12 @@
       const sexo = document.getElementById('forca-sexo').value;
       const valor = document.getElementById('forca-valor').value;
 
-      const status = getClassificacaoMotor(valor, 20);
+      const status = getClassificacaoMotor(valor, 10);
       window.saveToFirebase('forca', { nome, idade, sexo, valor, status });
       this.reset();
     });
 
-    // Formulário 4: Resistência (Flexão)
+    // Formulário 4: Resistência (Abdominal)
     document.getElementById('form-res').addEventListener('submit', function(e) {
       e.preventDefault();
       const nome = document.getElementById('res-nome').value.trim();
@@ -763,7 +763,7 @@
       const sexo = document.getElementById('res-sexo').value;
       const valor = document.getElementById('res-valor').value;
 
-      const status = getClassificacaoMotor(valor, 10);
+      const status = getClassificacaoMotor(valor, 20);
       window.saveToFirebase('resistencia', { nome, idade, sexo, valor, status });
       this.reset();
     });
